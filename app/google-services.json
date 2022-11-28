@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "885143205911",
+    "project_id": "ladm-u3-practica1-bdmixta",
+    "storage_bucket": "ladm-u3-practica1-bdmixta.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:885143205911:android:d53e562cf719fa47320452",
+        "android_client_info": {
+          "package_name": "mx.edu.ittepic.ladm_u3_practica1_bdmixta"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "885143205911-3anq0mtq6qousnr5dc737595hl26otiq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1Ler4mD9gFh-Q6NCiinzPr-tyfneHXnQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "885143205911-3anq0mtq6qousnr5dc737595hl26otiq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
