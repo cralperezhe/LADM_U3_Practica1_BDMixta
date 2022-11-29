@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity2">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,39 +27,39 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:id="@+id/nombre"
+        android:id="@+id/act_nombre"
         android:hint="NOMBRE COMPLETO"
         />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/escuela"
+        android:id="@+id/act_escuela"
         android:hint="ESCUELA DE PROCEDENCIA"/>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/telefono"
+        android:id="@+id/act_telefono"
         android:inputType="number"
         android:hint="NUMERO DE TELEFONO"
         />
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/carrera1"
+        android:id="@+id/act_carrera1"
         android:hint="CARRERA (OPCION 1)"
         />
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/carrera2"
+        android:id="@+id/act_carrera2"
         android:hint="CARRERA (OPCION 2)"
         />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/correo"
+        android:id="@+id/act_correo"
         android:hint="correo@ejemplo.com"
         android:inputType="textEmailAddress"
         />
@@ -67,17 +67,20 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="INSERTAR"
-        android:id="@+id/insertar"
+        android:text="ACTUALIZAR"
+        android:id="@+id/actualizar"
         android:layout_marginTop="20dp"
         android:backgroundTint="#808080"/>
 
-        <ListView
-            android:id="@+id/listaAlumnos"
+        <Button
             android:layout_width="match_parent"
-            android:layout_height="288dp"
-            android:layout_marginTop="20dp" />
+            android:layout_height="wrap_content"
+            android:text="REGRESAR"
+            android:id="@+id/regresar"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="#808080"/>
 
-</LinearLayout>
+    </LinearLayout>
+
 
 </ScrollView>
