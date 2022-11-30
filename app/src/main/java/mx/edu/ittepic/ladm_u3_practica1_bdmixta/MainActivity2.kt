@@ -35,7 +35,7 @@ class MainActivity2 : AppCompatActivity() {
             if (cursor.moveToFirst()) {
                 act_nombre.setText(cursor.getString(1))
                 act_escuela.setText(cursor.getString(2))
-                act_telefono.setText(cursor.getInt(3).toString())
+                act_telefono.setText(cursor.getString(3))
                 act_carrera1.setText(cursor.getString(4))
                 act_carrera2.setText(cursor.getString(5))
                 act_correo.setText(cursor.getString(6))
@@ -76,7 +76,7 @@ class MainActivity2 : AppCompatActivity() {
                 val datos = ContentValues()
                 datos.put("NOMBRE", act_nombre.text.toString())
                 datos.put("ESCUELAPROCEDENCIA", act_escuela.text.toString())
-                datos.put("TELEFONO", act_telefono.text.toString().toInt())
+                datos.put("TELEFONO", act_telefono.text.toString())
                 datos.put("CARRERA1", act_carrera1.text.toString())
                 datos.put("CARRERA2", act_carrera2.text.toString())
                 datos.put("CORREO", act_correo.text.toString())

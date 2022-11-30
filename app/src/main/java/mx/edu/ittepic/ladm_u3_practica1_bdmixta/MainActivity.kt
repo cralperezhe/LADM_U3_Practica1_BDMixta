@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity() {
     val baseDatos = BaseDatos(this,"Tecnologico",null,1)
     var IDs = ArrayList<Any?>()
     var nube = ""
+    var datosFirebase: HashMap<String, Any>? = null
 
     fun conectada() {
         val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -48,29 +49,68 @@ class MainActivity : AppCompatActivity() {
         var internet = NetworkConnection(applicationContext)
         internet.observe(this) { isConnected ->
             if (isConnected) {
-                nube = "Firebase"
                 Toast.makeText(this, "CONECTADO", Toast.LENGTH_LONG).show()
-                if(listaAlumnos.size != 0 && listaAlumnos.getItemAtPosition(0).toString() != "LA TABLA DE SQLITE ESTA VACIA"){
+                if(nube == "SQLite" && listaAlumnos.getItemAtPosition(0).toString() != "LA TABLA DE SQLITE ESTA VACIA" ){
                     AlertDialog.Builder(this)
                         .setTitle("IMPORTANTE")
-                        .setMessage("Se detectó un cambio, ¿desea trasladar la información a la nube?")
+                        .setMessage("Se detectó un cambio, ¿desea trasladar la información a la nube? $nube")
                         .setPositiveButton("Sí"){_, _ ->
-                            var texto = ""
-                            (0..listaAlumnos.size).iterator().forEach{
-                                texto += listaAlumnos.getItemAtPosition(it)
+
+                            var resultado = baseDatos.writableDatabase.rawQuery("SELECT * FROM CANDIDATO", null)
+                            if(resultado!= null && resultado.count!= 0){
+                                resultado.moveToFirst()
+                                do{
+                                    var datos = hashMapOf<String, Any>()
+                                    datos["NOMBRE"] = resultado.getString(1)
+                                    datos["ESCUELAPROCEDENCIA"] = resultado.getString(2)
+                                    datos["TELEFONO"] = resultado.getString(3)
+                                    datos["CARRERA1"] = resultado.getString(4)
+                                    datos["CARRERA2"] = resultado.getString(5)
+                                    datos["CORREO"] = resultado.getString(6)
+                                    datos["FECHA"] = resultado.getString(7)
+                                    db.collection("Candidatos")
+                                        .document(resultado.getInt(0).toString())
+                                        .set(datos as Any)
+                                        .addOnSuccessListener {}
+                                        .addOnFailureListener {
+                                            Toast.makeText(this,it.message!!,Toast.LENGTH_LONG).show()
+                                        }
+
+                                    val eliminar = baseDatos.writableDatabase.delete("CANDIDATO","ID=?", arrayOf(resultado.getInt(0).toString()))
+
+                                    if (eliminar == 0) {
+                                        AlertDialog.Builder(this)
+                                            .setMessage("ERROR NO SE BORRO")
+                                            .show()
+                                    } else mostrarTodos(nube)
+
+                                }while(resultado.moveToNext())
                             }
+
+                            mostrarTodos(nube)
+                            nube = "Firebase"
+
                             AlertDialog.Builder(this)
-                                .setMessage(texto)
+                                .setTitle("AVISO")
+                                .setMessage("Se trasladó toda la información a la nube correctamente!")
+                                .setPositiveButton("Ok"){_,_ ->}
                                 .show()
                         }
-                        .setNegativeButton("No"){_,_ ->}
-                        .show()//esos son de SQLite, los otros son de Firebase
+                        .setNegativeButton("No"){_,_ ->
+                            mostrarTodos(nube)
+                        }
+                        .show()
+                }else{
+                    mostrarTodos(nube)
+                    nube = "Firebase"
                 }
+
             } else {
                 nube = "SQLite"
                 Toast.makeText(this, "DESCONECTADO", Toast.LENGTH_LONG).show()
+                mostrarTodos(nube)
             }
-            mostrarTodos(nube)
+
 
         }
 
@@ -79,7 +119,7 @@ class MainActivity : AppCompatActivity() {
                .format(DateTimeFormatter.ofPattern("MMM dd yyyy, hh:mm:ss: a"))
            var alumno = baseDatos.writableDatabase
            var datosSQLite = ContentValues()
-           var datosFirebase: HashMap<String, Any>?
+
 
            if(nombre.text.toString()=="" || escuela.text.toString()=="" || telefono.text.toString()=="" || carrera1.text.toString()==""
                || carrera2.text.toString()=="" || correo.text.toString()==""){
@@ -92,7 +132,7 @@ class MainActivity : AppCompatActivity() {
                         "CARRERA2" to carrera2.text.toString(), "CORREO" to correo.text.toString(),
                         "FECHA" to dateTime)
                     db.collection("Candidatos")
-                        .add(datosFirebase)
+                        .add(datosFirebase!!)
                         .addOnSuccessListener {
                             resultado = 1
                         }
@@ -138,7 +178,7 @@ class MainActivity : AppCompatActivity() {
             var resultado = alumno.query("CANDIDATO", arrayOf("*"), null, null, null, null, null)
             if (resultado.moveToFirst()) {
                 do {
-                    val data = resultado.getString(1) + "\n" + resultado.getString(2) + " | " + resultado.getInt(3) + " | " +
+                    val data = resultado.getString(1) + "\n" + resultado.getString(2) + " | " + resultado.getString(3) + " | " +
                             resultado.getString(4) + " | " + resultado.getString(5) + " | " + resultado.getString(6) + " | " + resultado.getString(7)
                     lista.add(data)
                     IDs.add(resultado.getInt(0))
