@@ -4,8 +4,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
-import android.net.Network
-import android.net.NetworkCapabilities
 import android.net.NetworkInfo
 import android.os.Build
 import android.os.Bundle
@@ -15,18 +13,11 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.get
-import androidx.core.view.iterator
 import androidx.core.view.size
-import androidx.lifecycle.Observer
-import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_main.*
-import java.net.UnknownHostException
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.time.Instant
-
 
 class MainActivity : AppCompatActivity() {
     var db = FirebaseFirestore.getInstance()
@@ -65,13 +56,15 @@ class MainActivity : AppCompatActivity() {
                         .setMessage("Se detectó un cambio, ¿desea trasladar la información a la nube?")
                         .setPositiveButton("Sí"){_, _ ->
                             var texto = ""
-                            for (elemento in listaAlumnos){
-                                texto += elemento.toString()
+                            (0..listaAlumnos.size).iterator().forEach{
+                                texto += listaAlumnos.getItemAtPosition(it)
                             }
-                            Toast.makeText(this,texto, Toast.LENGTH_LONG).show()
+                            AlertDialog.Builder(this)
+                                .setMessage(texto)
+                                .show()
                         }
                         .setNegativeButton("No"){_,_ ->}
-                        .show()
+                        .show()//esos son de SQLite, los otros son de Firebase
                 }
             } else {
                 nube = "SQLite"
