@@ -13,7 +13,6 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.size
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_main.*
 import java.time.LocalDateTime
@@ -26,17 +25,20 @@ class MainActivity : AppCompatActivity() {
     var nube = ""
     var datosFirebase: HashMap<String, Any>? = null
 
-    fun conectada() {
+    fun conectada():Boolean {
         val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
         val isConnected: Boolean = activeNetwork?.isConnectedOrConnecting == true
-        if (isConnected) {
+        return if (isConnected) {
             nube = "Firebase"
             Toast.makeText(this, "CONECTADO", Toast.LENGTH_LONG).show()
+            true
         } else {
             nube = "SQLite"
             Toast.makeText(this, "DESCONECTADO", Toast.LENGTH_LONG).show()
+            false
         }
+        return false
     }
 
     @RequiresApi(Build.VERSION_CODES.O) //Se requiere para obtener la fecha y hora del dispositivo
@@ -50,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         internet.observe(this) { isConnected ->
             if (isConnected) {
                 Toast.makeText(this, "CONECTADO", Toast.LENGTH_LONG).show()
-                if(nube == "SQLite" && listaAlumnos.getItemAtPosition(0).toString() != "LA TABLA DE SQLITE ESTA VACIA" ){
+                if(nube == "SQLite" && listaAlumnos.getItemAtPosition(0).toString() != "LA TABLA DE SQLITE ESTA VACIA" && conectada()){
                     AlertDialog.Builder(this)
                         .setTitle("IMPORTANTE")
                         .setMessage("Se detectó un cambio, ¿desea trasladar la información a la nube? $nube")
