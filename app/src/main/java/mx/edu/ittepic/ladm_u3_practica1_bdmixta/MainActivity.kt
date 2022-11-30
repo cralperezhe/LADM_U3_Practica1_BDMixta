@@ -16,6 +16,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
+import androidx.core.view.iterator
 import androidx.core.view.size
 import androidx.lifecycle.Observer
 import com.google.firebase.FirebaseNetworkException
@@ -58,7 +59,20 @@ class MainActivity : AppCompatActivity() {
             if (isConnected) {
                 nube = "Firebase"
                 Toast.makeText(this, "CONECTADO", Toast.LENGTH_LONG).show()
-                if(listaAlumnos.size != 0) AlertDialog.Builder(this).setMessage(listaAlumnos.getItemAtPosition(0).toString()).show()
+                if(listaAlumnos.size != 0 && listaAlumnos.getItemAtPosition(0).toString() != "LA TABLA DE SQLITE ESTA VACIA"){
+                    AlertDialog.Builder(this)
+                        .setTitle("IMPORTANTE")
+                        .setMessage("Se detectó un cambio, ¿desea trasladar la información a la nube?")
+                        .setPositiveButton("Sí"){_, _ ->
+                            var texto = ""
+                            for (elemento in listaAlumnos){
+                                texto += elemento.toString()
+                            }
+                            Toast.makeText(this,texto, Toast.LENGTH_LONG).show()
+                        }
+                        .setNegativeButton("No"){_,_ ->}
+                        .show()
+                }
             } else {
                 nube = "SQLite"
                 Toast.makeText(this, "DESCONECTADO", Toast.LENGTH_LONG).show()
@@ -92,7 +106,7 @@ class MainActivity : AppCompatActivity() {
                 }else if(nube == "SQLite"){
                     datosSQLite.put("NOMBRE",nombre.text.toString())
                     datosSQLite.put("ESCUELAPROCEDENCIA",escuela.text.toString())
-                    datosSQLite.put("TELEFONO",telefono.text.toString().toInt())
+                    datosSQLite.put("TELEFONO",telefono.text.toString())
                     datosSQLite.put("CARRERA1",carrera1.text.toString())
                     datosSQLite.put("CARRERA2",carrera2.text.toString())
                     datosSQLite.put("CORREO",correo.text.toString())
